@@ -1,0 +1,51 @@
+name: Docker Build and Publish
+
+# 1. Triggers: When should this run?
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# 2. Environment Variables
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    # 3. Permissions required to push to GitHub's registry
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Step A: Download the code onto the GitHub runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step B: Log in to the GitHub Container Registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step C: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Step D: Build the Docker image and push it to the registry
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true # This automatically pushes the final image to the registry
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
