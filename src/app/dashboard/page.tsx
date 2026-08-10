@@ -1,5 +1,6 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import DashboardHome from "../components/dashboard/DashboardHome";
@@ -31,6 +32,19 @@ const supabase = createClient(
 );
 
 export default function DashboardPage() {
+  type ProfileData = {
+    name?: string;
+    gender?: string;
+    age?: number | null;
+    height?: number | null;
+    weight?: number | null;
+    bmi?: number | null;
+    bmi_category?: string | null;
+    activity_level?: string | null;
+    goal?: string | null;
+    updated_at?: string | null;
+    [key: string]: any;
+  };
   const [activeMenu, setActiveMenu] = useState("1");
   const [isMobile, setIsMobile] = useState(false);
   
@@ -38,7 +52,7 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   
   const user = useSelector((state: any) => state.user);

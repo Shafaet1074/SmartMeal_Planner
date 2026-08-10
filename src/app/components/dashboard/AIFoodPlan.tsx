@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { message } from "antd"; // Kept only for toast notifications
