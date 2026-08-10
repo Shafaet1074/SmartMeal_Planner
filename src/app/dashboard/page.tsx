@@ -31,20 +31,22 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+/* ---------- TypeScript Interfaces ---------- */
+export interface ProfileData {
+  name?: string;
+  gender?: string;
+  age?: number | null;
+  height?: number | null;
+  weight?: number | null;
+  bmi?: number | null;
+  bmi_category?: string | null;
+  activity_level?: string | null;
+  goal?: string | null;
+  updated_at?: string | null;
+  [key: string]: any;
+}
+
 export default function DashboardPage() {
-  type ProfileData = {
-    name?: string;
-    gender?: string;
-    age?: number | null;
-    height?: number | null;
-    weight?: number | null;
-    bmi?: number | null;
-    bmi_category?: string | null;
-    activity_level?: string | null;
-    goal?: string | null;
-    updated_at?: string | null;
-    [key: string]: any;
-  };
   const [activeMenu, setActiveMenu] = useState("1");
   const [isMobile, setIsMobile] = useState(false);
   
@@ -52,7 +54,8 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   
-  const [profileData, setProfileData] = useState(null);
+  // Strictly typed state
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   
   const user = useSelector((state: any) => state.user);
@@ -97,7 +100,8 @@ export default function DashboardPage() {
     }
   };
 
-  const formatActivityLevel = (level: string) => {
+  const formatActivityLevel = (level?: string | null) => {
+    if (!level) return "—";
     const levels: { [key: string]: string } = {
       sedentary: "Sedentary",
       light: "Lightly Active",
@@ -108,7 +112,8 @@ export default function DashboardPage() {
     return levels[level] || level;
   };
 
-  const formatGoal = (goal: string) => {
+  const formatGoal = (goal?: string | null) => {
+    if (!goal) return "—";
     const goals: { [key: string]: string } = {
       lose: "Lose Fat",
       maintain: "Maintain Weight",
@@ -117,7 +122,8 @@ export default function DashboardPage() {
     return goals[goal] || goal;
   };
 
-  const getBMIColor = (category: string) => {
+  const getBMIColor = (category?: string | null) => {
+    if (!category) return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
     const colors: { [key: string]: string } = {
       Underweight: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 border-blue-200 dark:border-blue-500/30",
       Normal: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30",
@@ -147,7 +153,7 @@ export default function DashboardPage() {
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
       
-      {/* Desktop Sidebar (Profile button removed, overflow-hidden added to prevent scrollbars) */}
+      {/* Desktop Sidebar */}
       {!isMobile && (
         <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors z-20 overflow-hidden">
           <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800 shrink-0">
@@ -210,7 +216,7 @@ export default function DashboardPage() {
               </button>
             )}
 
-            {/* Universal Profile Trigger (Moved to Header) */}
+            {/* Universal Profile Trigger */}
             <button 
               onClick={() => setProfileOpen(true)} 
               className="ml-2 flex items-center gap-2 p-1.5 pr-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full sm:rounded-lg transition-colors"
@@ -319,7 +325,7 @@ export default function DashboardPage() {
                   )}
                   <div className="min-w-0">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white truncate">
-                      {profileData.name || user?.displayName || "User"}
+                      {profileData?.name || user?.displayName || "User"}
                     </h2>
                     <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
                   </div>
@@ -331,19 +337,19 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
                       <p className="text-xs text-slate-500">Gender</p>
-                      <p className="font-semibold text-slate-900 dark:text-white capitalize">{profileData.gender || "—"}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white capitalize">{profileData?.gender || "—"}</p>
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
                       <p className="text-xs text-slate-500">Age</p>
-                      <p className="font-semibold text-slate-900 dark:text-white">{profileData.age ? `${profileData.age} yrs` : "—"}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{profileData?.age ? `${profileData.age} yrs` : "—"}</p>
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
                       <p className="text-xs text-slate-500">Height</p>
-                      <p className="font-semibold text-slate-900 dark:text-white">{profileData.height ? `${profileData.height.toFixed(1)} cm` : "—"}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{profileData?.height ? `${profileData.height.toFixed(1)} cm` : "—"}</p>
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
                       <p className="text-xs text-slate-500">Weight</p>
-                      <p className="font-semibold text-slate-900 dark:text-white">{profileData.weight ? `${profileData.weight.toFixed(1)} kg` : "—"}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{profileData?.weight ? `${profileData.weight.toFixed(1)} kg` : "—"}</p>
                     </div>
                   </div>
                 </div>
@@ -352,12 +358,12 @@ export default function DashboardPage() {
                 <div>
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Target & Metrics</h3>
                   <div className="space-y-3">
-                    {profileData.bmi && (
+                    {profileData?.bmi && (
                       <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
                         <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Current BMI</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-slate-900 dark:text-white">{profileData.bmi.toFixed(1)}</span>
-                          {profileData.bmi_category && (
+                          {profileData?.bmi_category && (
                             <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${getBMIColor(profileData.bmi_category)}`}>
                               {profileData.bmi_category}
                             </span>
@@ -368,17 +374,17 @@ export default function DashboardPage() {
                     <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
                       <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Activity Level</span>
                       <span className="text-sm font-bold text-slate-900 dark:text-white">
-                        {formatActivityLevel(profileData.activity_level)}
+                        {formatActivityLevel(profileData?.activity_level)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
                       <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Primary Goal</span>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
-                        profileData.goal === 'lose' ? 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30' : 
-                        profileData.goal === 'gain' ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30' : 
+                        profileData?.goal === 'lose' ? 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30' : 
+                        profileData?.goal === 'gain' ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30' : 
                         'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30'
                       }`}>
-                        {formatGoal(profileData.goal)}
+                        {formatGoal(profileData?.goal)}
                       </span>
                     </div>
                   </div>
