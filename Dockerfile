@@ -19,6 +19,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Set environment variables needed during the build process
+ARG SUPABASE_URL
+ENV SUPABASE_URL=$SUPABASE_URL
+
+
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
