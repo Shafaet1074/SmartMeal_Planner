@@ -1,6 +1,6 @@
 # 🥗 Smart AI Meal Planner
 
-##🌐 Live Demo: https://ai-smart-meal-planner.netlify.app/
+🌐 Live Demo: https://ai-smart-meal-planner.netlify.app/
 
 ### AI-Powered Nutrition Tracking & Personalized Meal Planning Platform
 
