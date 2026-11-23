@@ -1,5 +1,7 @@
 # 🥗 Smart AI Meal Planner
 
+##🌐 Live Demo: https://ai-smart-meal-planner.netlify.app/
+
 ### AI-Powered Nutrition Tracking & Personalized Meal Planning Platform
 
 Smart AI Meal Planner is a full-stack web application that helps users manage their daily nutrition, track calorie consumption, monitor hydration, and maintain fitness goals through AI-powered recommendations.
